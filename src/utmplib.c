@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <time.h>
 #include <utmp.h>
 
 #define LENGTH(a) ((sizeof(a)) / (sizeof(a[0])))
@@ -62,4 +63,31 @@ int utmp_reload() {
 utmp_close() {
   if (fd_utmp != -1)
     close(fd_utmp);
+}
+
+int logout_tty(char *line) {
+  int fd;
+  struct utmp rec;
+  int len = sizeof(struct utmp);
+  int retval = -1;
+
+  if ((fd = open(UTMP_FILE, O_RDWR)) == -1)
+    return -1;
+
+  /* search and replace  */
+  while (read(fd, &rec, len) == len) {
+    if (strncmp(rec.ut_line, line, sizeof(rec.ut_line)) == 0) {
+      rec.ut_type == DEAD_PROCESS;
+      if (time(&rec.ut_time) != -1)
+        if (lseek(fd, -len, SEEK_CUR) != -1)
+          if (write(fd, &rec, len) == len)
+            retval = 0;
+      break;
+    }
+  }
+
+  /* close file */
+  if (close(fd) == -1)
+    retval = -1;
+  return retval;
 }
