@@ -85,9 +85,11 @@ int locate(int fd, int nline, char *rbuf) {
 
   // 处理缓冲区大小大于文件大小的情况
   if (pstat.st_size <= READSIZE) {
+    /* printf("缓冲区大于文件\n"); */
     off = 0;
     whence = SEEK_CUR;
   } else {
+    /* printf("缓冲区小于文件\n"); */
     off = 0 - READSIZE;
     whence = SEEK_END;
   }
@@ -102,6 +104,7 @@ int locate(int fd, int nline, char *rbuf) {
             break;
         }
       }
+      printf("换行计数为: %d\n", nent);
       // 累计距离文件尾部的偏移量
       if (nent != nline + 1)
         offs2end += len;
@@ -110,10 +113,13 @@ int locate(int fd, int nline, char *rbuf) {
         break;
       }
       memset(rbuf, 0, READSIZE);
+    } else {
+      break;
     }
   }
   if (offs_seek == -1)
     printerr(errno);
+  printf("距离文件尾部的偏移量为%d\n", offs2end);
   return offs2end;
 }
 
