@@ -30,6 +30,7 @@ int main(int ac, char *av[]) {
   struct stat info;
 
   if (ac > 1) {
+    // stat 通过文件名filename获取文件信息，并保存在buf所指的结构体stat中
     if (stat(av[1], &info) != -1) {
       show_stat_info(av[1], &info);
       return 0;

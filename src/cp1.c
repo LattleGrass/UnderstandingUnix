@@ -36,15 +36,15 @@ int main(int ac, char *av[]) {
     exit(1);
   }
 
-  if ((in_fd = open(av[1], O_RDONLY)) == -1)
+  if ((in_fd = open(av[1], O_RDONLY)) == -1) // 打开文件，获得文件描述符
     oops("Cannot open ", av[1]);
 
-  if ((out_fd = creat(av[2], COPYMODE)) == -1) {
+  if ((out_fd = creat(av[2], COPYMODE)) == -1) { // 创建要复制的文件，获得文件描述符
     oops("Cannot creat ", av[2]);
   }
 
-  while ((n_char = read(in_fd, buf, BUFFSIZE)) > 0) {
-    if (write(out_fd, buf, n_char) != n_char) {
+  while ((n_char = read(in_fd, buf, BUFFSIZE)) > 0) { // 从源文件中读出buffsize长度的内容
+    if (write(out_fd, buf, n_char) != n_char) { // 写入目标文件中
       oops("write error to ", av[2]);
     }
   }
@@ -55,7 +55,7 @@ int main(int ac, char *av[]) {
     oops("read error from ", av[1]);
   }
 
-  if (close(in_fd) == -1 || close(out_fd) == -1) {
+  if (close(in_fd) == -1 || close(out_fd) == -1) { // 关闭两个文件描述符
     oops("Error closing files", "");
   }
 }

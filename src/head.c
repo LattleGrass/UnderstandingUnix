@@ -52,29 +52,28 @@ int main(int argc, char *argv[]) {
 
   filename = argv[optind];
   printf("filename: %s\n", filename);
-  if ((rfd = open(filename, O_RDONLY)) == -1) {
+  if ((rfd = open(filename, O_RDONLY)) == -1) { // 打开文件 获得描述符
     fprintf(stderr, "%s: ", argv[0]);
     return -1;
   }
 
-  while ((rlen = read(rfd, rbuf, READSIZE)) > 0) {
+  while ((rlen = read(rfd, rbuf, READSIZE)) > 0) { // 循环的读出文件内容
     for (i = 0; i < rlen; i++) {
-      if (rbuf[i] == '\n') {
-        pb = &rbuf[i];
-        if (++nent == nline)
+      if (rbuf[i] == '\n') { // 如果文件内容里面包含‘\n’ 表示这是一行结束
+        pb = &rbuf[i]; // 记录换行的位置
+        if (++nent == nline) // 判断行数是否等于预设的n
           break;
       }
     }
-    /* printf("nent: %d\n", nent); */
     if (nent == nline) {
-      printf("%.*s", (int)(pb - &rbuf[0] + 1), rbuf);
+      printf("%.*s", (int)(pb - &rbuf[0] + 1), rbuf); // 打印最后一行
       break;
     } else if (i == rlen) {
       printf("%s", rbuf);
     }
-    memset(rbuf, 0, READSIZE);
+    memset(rbuf, 0, READSIZE); // 缓冲清除
   }
-  ret = close(rfd);
+  ret = close(rfd); // 关闭文件
   if (ret == -1) {
     perror("close file error: ");
   }
