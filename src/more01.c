@@ -53,15 +53,15 @@ void do_more(FILE *fp) {
   char line[LINELEN];
   int num_of_lines = 0;
   int see_more(), reply;
-  while (fgets(line, LINELEN, fp)) {
-    if (num_of_lines == PAGELEN) {
-      reply = see_more();
+  while (fgets(line, LINELEN, fp)) { // 从文件描述符中读出LLINELEN个数据
+    if (num_of_lines == PAGELEN) { // 如果达到了一页的数量
+      reply = see_more();          // 收集键盘指令
       if (reply == 0) {
         break;
       }
       num_of_lines -= reply;
     }
-    if (fputs(line, stdout) == EOF) {
+    if (fputs(line, stdout) == EOF) { // 打印出来内容
       exit(1);
     }
     num_of_lines++;

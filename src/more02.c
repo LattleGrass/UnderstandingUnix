@@ -54,12 +54,12 @@ void do_more(FILE *fp) {
   int see_more(FILE *), reply;
 
   FILE *fp_tty;
-  fp_tty = fopen("/dev/tty", "r");
+  fp_tty = fopen("/dev/tty", "r"); // 键盘
   if (fp_tty == NULL)
     exit(1);
   while (fgets(line, LINELEN, fp)) {
     if (num_of_lines == PAGELEN) {
-      reply = see_more(fp_tty);
+      reply = see_more(fp_tty); // 从键盘读入命令
       if (reply == 0)
         break;
       num_of_lines -= reply;
