@@ -27,7 +27,7 @@
 
 void set_crmode(void);
 int get_response(char *);
-void tty_mode(int);
+int tty_mode(int);
 
 int main() {
         int response;
@@ -59,15 +59,16 @@ int get_response(char *question) {
 void set_crmode() {
         struct termios ttystate;
         tcgetattr(0, &ttystate);
-        ttystate.c_cflag &= ~ICANON;
+        ttystate.c_lflag &= ~ICANON;
         ttystate.c_cc[VMIN] = 1;
         tcsetattr(0, TCSANOW, &ttystate);
 }
 
-void tty_mode(int how) {
+int tty_mode(int how) {
         static struct termios original_mode;
-        if (how == 0)
+        if (how == 0) {
                 tcgetattr(0, &original_mode);
-        else
-                tcsetattr(0, TCSANOW, &original_mode);
+                return 1;
+        } else
+                return tcsetattr(0, TCSANOW, &original_mode);
 }
