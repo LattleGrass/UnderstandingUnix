@@ -113,5 +113,6 @@ int tty_mode(int how) {
 
 void ctrl_c_handler(int signum) {
         tty_mode(1);
+        printf("fuck you!\n");
         exit(1);
 }
