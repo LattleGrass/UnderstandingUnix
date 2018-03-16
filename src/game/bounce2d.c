@@ -32,6 +32,8 @@ struct ppball the_ball;
 
 void set_up();
 void wrap_up();
+int bounce_or_lose(struct ppball *bp);
+int set_ticker(int n_msecs);
 
 int main() {
         int c;
@@ -66,7 +68,7 @@ void set_up() {
         crmode();
 
         signal(SIGINT, SIG_IGN);
-        mvaddch(the_ball.y_pos, the_ball.x_po, the_ball.symbol);
+        mvaddch(the_ball.y_pos, the_ball.x_pos, the_ball.symbol);
         refresh();
 
         signal(SIGALRM, ball_move);
@@ -88,6 +90,12 @@ void ball_move(int signum) {
         if (the_ball.y_ttm > 0 && the_ball.y_ttg-- == 1) {
                 the_ball.y_pos += the_ball.y_dir;
                 the_ball.y_ttg = the_ball.y_ttm;
+                moved = 1;
+        }
+
+        if (the_ball.x_ttm > 0 && the_ball.x_ttg-- == 1) {
+                the_ball.x_pos += the_ball.x_dir;
+                the_ball.x_ttg = the_ball.x_ttm;
                 moved = 1;
         }
 
@@ -119,4 +127,18 @@ int bounce_or_lose(struct ppball *bp) {
                 return_val = 1;
         }
         return return_val;
+}
+
+int set_ticker(int n_msecs) {
+        struct itimerval new_timeset;
+        long n_sec, n_usecs;
+
+        n_sec = n_msecs / 1000;
+        n_usecs = (n_msecs % 1000) * 1000L;
+        new_timeset.it_interval.tv_sec = n_sec;
+        new_timeset.it_interval.tv_usec = n_usecs;
+
+        new_timeset.it_value.tv_sec = n_sec;
+        new_timeset.it_value.tv_usec = n_usecs;
+        return setitimer(ITIMER_REAL, &new_timeset, NULL);
 }
