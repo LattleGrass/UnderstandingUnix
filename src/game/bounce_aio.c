@@ -35,15 +35,13 @@ int dir = 1;
 int col = 0;
 int delay = 200;
 int done = 0;
-
-int set_ticker(int n_msecs);
-
 struct aiocb kbcbuf;
 
 int main() {
         void on_alarm(int);
         void on_input(int);
         void setup_aio_buffer();
+        int set_ticker(int);
 
         initscr();
         crmode();
