@@ -24,7 +24,7 @@
 #define LENGTH(a) ((sizeof(a)) / (sizeof(a[0])))
 #define TRUE 1
 #define FALSE 0
-#define DFL_PROMPT ">"
+#define DFL_PROMPT "> "
 
 int main() {
         char *cmdline, *prompt, **arglist;
