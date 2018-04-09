@@ -6,6 +6,7 @@
 
 #include <stddef.h>
 
+int process(char **);
 char *next_cmd();
 char **splitline(char *);
 void freelist(char **);
