@@ -61,7 +61,7 @@ int assign(char *str) {
 
 int okname(char *str) {
         char *cp;
-        for (cp = str; *cp; cp ==) {
+        for (cp = str; *cp; cp ++) {
                 if ((isdigit(*cp) && cp == str) ||
                     !(isalnum(*cp) || *cp == '_'))
                         return 0;

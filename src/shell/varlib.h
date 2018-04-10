@@ -5,8 +5,7 @@
 #include <stdio.h>
 
 struct var {
-        char *name;
-        char *val;
+        char *str;
         int global;
 };
 
@@ -15,4 +14,6 @@ int VLexport(char *);
 int VLstore(char *, char *);
 struct var *VLfind(char *);
 void VLfree();
+void VLenviron2table(char **);
+char **VLtable2environ(void);
 #endif
