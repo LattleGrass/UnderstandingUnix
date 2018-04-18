@@ -30,10 +30,10 @@
 #define FALSE 0
 #define PORTNUM 13000
 #define HOSTLEN 256
-#define oops(msg)            \
-        {                    \
-                perror(msg); \
-                exit(1);     \
+#define oops(msg)                                                              \
+        {                                                                      \
+                perror(msg);                                                   \
+                exit(1);                                                       \
         }
 
 int main(int ac, char *av[]) {
@@ -73,7 +73,8 @@ int main(int ac, char *av[]) {
         /* 6、SOCK_PACKET 提供和网络驱动程序直接通信. protocol 用来指定socket
          * 所使用的传输协议编号, 通常此参考不用管它, 设为0 即可. */
         sock_id = socket(PF_INET, SOCK_STREAM, 0);
-        if (sock_id == -1) oops("socket");
+        if (sock_id == -1)
+                oops("socket");
 
         /* step2: bind address to socket. Address is host, port */
         /* bzero() 会将内存块（字符串）的前n个字节清零 */
@@ -87,7 +88,8 @@ int main(int ac, char *av[]) {
         gethostname(hostname, HOSTLEN);
         printf("%s\n", hostname);
         hp = gethostbyname(hostname);
-        if (hp == NULL) oops("get host by name");
+        if (hp == NULL)
+                oops("get host by name");
         printf("%s\n", hp->h_name);
 
         /* bcopy() 函数用来复制内存(字符串) */
@@ -116,7 +118,8 @@ int main(int ac, char *av[]) {
          * 端将收到ECONNREFUSED 的错误. Listen()并未开始接收连线, 只是设置socket
          * 为listen 模式, 真正接收client 端连线的是accept().
          * 通常listen()会在socket(), bind()之后调用, 接着才调用accept(). */
-        if (listen(sock_id, 1) != 0) oops("listen");
+        if (listen(sock_id, 1) != 0)
+                oops("listen");
 
         while (1) {
                 /* accept()用来接受参数s 的socket 连线. 参数s 的socket
@@ -130,9 +133,11 @@ int main(int ac, char *av[]) {
                 printf("hahaha\n");
                 sock_fd = accept(sock_id, NULL, NULL);
                 printf("Wow! got a call!\n");
-                if (sock_fd == -1) oops("accept");
+                if (sock_fd == -1)
+                        oops("accept");
                 sock_fp = fdopen(sock_fd, "w");
-                if (sock_fp == NULL) oops("fdopen");
+                if (sock_fp == NULL)
+                        oops("fdopen");
 
                 thetime = time(NULL);
                 fprintf(sock_fp, "The time here is...");
