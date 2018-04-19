@@ -3,7 +3,7 @@
  *
  *       Filename:  rls.c
  *
- *    Description:  remote ls
+ *    Description:  remote ls客户端
  *
  *        Version:  1.0
  *        Created:  2018-04-19
