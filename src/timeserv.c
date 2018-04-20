@@ -19,7 +19,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <time.h>
@@ -111,7 +111,7 @@ int main(int ac, char *av[]) {
         if (bind(sock_id, (struct sockaddr *)&saddr, sizeof(saddr)) != 0)
                 oops("bind");
 
-        /* steps: allow incoming calls with Qsize = 1 on socket */
+        /* step 3: allow incoming calls with Qsize = 1 on socket */
 
         /* listen()用来等待参数s 的socket 连线. 参数backlog
          * 指定同时能处理的最大连接要求, 如果连接数目达此上限则client
