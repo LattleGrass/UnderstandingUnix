@@ -31,7 +31,7 @@ int main() {
         void *print_msg(void *);
 
         pthread_create(&t1, NULL, print_msg, (void *)"hello");
-        pthread_create(&t2, NULL, print_msg, (void *)"world");
+        pthread_create(&t2, NULL, print_msg, (void *)" world\n");
 
         pthread_join(t1, NULL);
         pthread_join(t2, NULL);
@@ -41,7 +41,7 @@ void *print_msg(void *m) {
         char *cp = (char *)m;
         int i;
         for (i = 0; i < NUM; i++) {
-                printf("%s ", m);
+                printf("%s", m);
                 fflush(stdout);
                 sleep(1);
         }
