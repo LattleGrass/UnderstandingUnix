@@ -70,8 +70,8 @@ void process_rq(char *rq, int fd) {
         /* create a new process and return if not the child */
         if (fork() != 0)
                 return;
-        strcpy(arg, "/");
-        if (sscanf(rq, "%s%s", cmd, arg + 2) != 2)
+        strcpy(arg, "./");
+        if (sscanf(rq, "%s %s", cmd, arg + 2) != 2)
                 return;
         if (strcmp(cmd, "GET") != 0)
                 cannot_do(fd);
@@ -92,6 +92,7 @@ void header(FILE *fp, char *content_type) {
 }
 
 void cannot_do(int fd) {
+        printf("I cannot do this! my lord!!\n");
         FILE *fp = fdopen(fd, "w");
         fprintf(fp, "HTTP/1.0 501 Not Implemented");
         fprintf(fp, "Content-type: text/plain\r\n");
@@ -106,7 +107,7 @@ void do_404(char *item, int fd) {
         fprintf(fp, "HTTP/1.0 404 Not Found\r\n");
         fprintf(fp, "Content-type: text/plain\r\n");
         fprintf(fp, "\r\n");
-        fprintf(fp, "The item you requested:%s\r\nis not found\r\n", item);
+        fprintf(fp, "The item you requested: %s\r\nis not found\r\n", item);
         fclose(fp);
 }
 
