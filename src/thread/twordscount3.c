@@ -1,9 +1,9 @@
 /*
  * =====================================================================================
  *
- *       Filename:  twordscount2.c
+ *       Filename:  twordscount3.c
  *
- *    Description:
+ *    Description:  邮箱旗帜模型
  *
  *        Version:  1.0
  *        Created:  2018-04-25
@@ -29,15 +29,24 @@ struct arg_set {
         int count;
 };
 
+struct arg_set *mailbox;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t flag = PTHREAD_COND_INITIALIZER;
+
 int main(int ac, char **av) {
         pthread_t t1, t2;
         struct arg_set args1, args2;
         void *count_words(void *);
 
+        int reports_in = 0;
+        int total_words = 0;
+
         if (ac != 3) {
                 printf("usage: %s file1 file2\n", av[0]);
                 exit(1);
         }
+
+        pthread_mutex_lock(&lock);
 
         args1.fname = av[1];
         args1.count = 0;
@@ -47,12 +56,22 @@ int main(int ac, char **av) {
         args2.count = 0;
         pthread_create(&t2, NULL, count_words, (void *)&args2);
 
-        pthread_join(t1, NULL);
-        pthread_join(t2, NULL);
-
-        printf("%5d: %s\n", args1.count, av[1]);
-        printf("%5d: %s\n", args2.count, av[2]);
-        printf("%5d: total_words\n", args1.count + args2.count);
+        while (reports_in < 2) {
+                printf("MAIN: waiting for flag to go up\n");
+                pthread_cond_wait(&flag, &lock);
+                printf("MAIN: Wow! flag has raised, I have the lock\n");
+                printf("%7d: %s\n", mailbox->count, mailbox->fname);
+                total_words += mailbox->count;
+                if (mailbox == &args1)
+                        pthread_join(t1, NULL);
+                if (mailbox == &args2)
+                        pthread_join(t2, NULL);
+                mailbox = NULL;
+                pthread_cond_signal(&flag);
+                reports_in++;
+        }
+        printf("%7d: total_words\n", total_words);
+        exit(0);
 }
 
 void *count_words(void *a) {
@@ -71,5 +90,15 @@ void *count_words(void *a) {
         } else {
                 perror(args->fname);
         }
+        printf("COUNT: waiting to get lock\n");
+        pthread_mutex_lock(&lock);
+        printf("COUNT: have lock, storing data\n");
+        if (mailbox != NULL)
+                pthread_cond_wait(&flag, &lock);
+        mailbox = args;
+        printf("COUNT: raising flag\n");
+        pthread_cond_signal(&flag);
+        printf("COUNT: unlocking box\n");
+        pthread_mutex_unlock(&lock);
         return NULL;
 }
